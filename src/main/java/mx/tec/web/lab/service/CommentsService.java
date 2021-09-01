@@ -42,6 +42,7 @@ public class CommentsService {
 
 	/**
 	 * No args constructor
+	 * @param endpoint URL of the endpoint used to retrieve the comments
 	 */
 	public CommentsService(@Value("${commentsEndpoint}") String endpoint) {
 		this.endpoint = endpoint;
