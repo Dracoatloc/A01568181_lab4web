@@ -45,7 +45,7 @@ import mx.tec.web.lab.vo.ProductVO;
 @RequestMapping("/ecom/api/v1")
 @Validated
 public class ProductController {
-	private static final Logger log = LoggerFactory.getLogger(ProductController.class);	
+	private static final Logger LOG = LoggerFactory.getLogger(ProductController.class);	
 	
 	/** A reference to the Product Manager */
 	@Resource
@@ -57,7 +57,7 @@ public class ProductController {
 	 */
 	@GetMapping("/products")
 	public ResponseEntity<List<ProductVO>> getProducts() {
-		log.debug("Getting all the products");
+		LOG.info("Getting all the products");
 		List<ProductVO> products = productManager.getProducts();
 		return new ResponseEntity<>(products, HttpStatus.OK);
 	}	
@@ -69,14 +69,14 @@ public class ProductController {
 	 */
 	@GetMapping("/products/{id}")
 	public ResponseEntity<ProductVO> getProduct(@PathVariable(value = "id") @Min(value = 0, message = "The id must be positive") long id) {
-		log.debug("Getting the product by id: {}", id);
+		LOG.info("Getting the product by id: {}", id);
 		ResponseEntity<ProductVO> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		Optional<ProductVO> product = productManager.getProduct(id);
 		
 		if (product.isPresent()) {
 			responseEntity = new ResponseEntity<>(product.get(), HttpStatus.OK);
 		} else {
-			log.warn("Product with id {} not found ", id);
+			LOG.warn("Product with id {} not found ", id);
 		}
 
 		return responseEntity;
@@ -143,19 +143,19 @@ public class ProductController {
 	
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> onConstraintViolationException(final ConstraintViolationException cve) {
-    	log.error("Invalid parameter", cve);
+    	LOG.error("Invalid parameter", cve);
         return new ResponseEntity<>(cve.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> onMethodArgumentNotValidException(final MethodArgumentNotValidException manve) {
-    	log.error("Invalid input", manve);
+    	LOG.error("Invalid input", manve);
     	
     	List<String> messages = new ArrayList<>();
     	
     	List<ObjectError> errors = manve.getAllErrors();
     	for (ObjectError error : errors) {
-    		log.debug(error.getDefaultMessage());
+    		LOG.debug(error.getDefaultMessage());
         	messages.add(error.getDefaultMessage());
     	}
 
